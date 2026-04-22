@@ -1,0 +1,14 @@
+# Core
+beir==2.0.0
+bm25s==0.2.12
+sentence-transformers>=2.7.0
+faiss-cpu>=1.8.0
+torch>=2.0.0
+
+# App
+gradio>=4.44.0
+
+# Data & utils
+pandas>=2.0.0
+numpy>=1.24.0
+datasets>=2.0.0
