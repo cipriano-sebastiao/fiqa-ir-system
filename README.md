@@ -32,11 +32,11 @@ Query (natural language)
 **Dataset** · FiQA-2018 via [BEIR](https://github.com/beir-cellar/beir) — 57,638 financial passages, 648 test queries  
 **BM25** · [bm25s](https://github.com/xhluca/bm25s) — grid-searched k₁ ∈ {0.5, 0.9, 1.2, 1.5} × b ∈ {0.25, 0.40, 0.55, 0.75}  
 **SBERT** · [`multi-qa-mpnet-base-dot-v1`](https://huggingface.co/sentence-transformers/multi-qa-mpnet-base-dot-v1) — fine-tuned for asymmetric QA retrieval  
-**Index** · FAISS `IndexFlatIP` with L2-normalised vectors (dot product = cosine similarity)
+**Index** · FAISS `IndexFlatIP` with L2-normalised vectors
 
 ---
 
-## Repository Structure
+## Repository
 
 ```
 fiqa-ir-system/
