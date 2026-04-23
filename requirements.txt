@@ -7,7 +7,6 @@ torch>=2.0.0
 
 # Apps
 gradio>=4.44.0
-streamlit>=1.32.0
 
 # Data & utils
 pandas>=2.0.0
