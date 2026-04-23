@@ -1,12 +1,13 @@
-# Core
+# Core IR
 beir==2.0.0
 bm25s==0.2.12
 sentence-transformers>=2.7.0
 faiss-cpu>=1.8.0
 torch>=2.0.0
 
-# App
+# Apps
 gradio>=4.44.0
+streamlit>=1.32.0
 
 # Data & utils
 pandas>=2.0.0
