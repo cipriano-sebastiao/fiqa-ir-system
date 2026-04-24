@@ -2,7 +2,7 @@
 
 A comparison of lexical (BM25) and semantic (SBERT + FAISS) retrieval over the [FiQA-2018](https://sites.google.com/view/fiqa) financial QA corpus, evaluated on the BEIR benchmark. Built as part of my MSc coursework and extended into an interactive demo.
 
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](http://127.0.0.1:7860/)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://github.com/cipriano-sebastiao/fiqa-ir-system/blob/main/app.py)
 
 ---
 
