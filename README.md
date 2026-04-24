@@ -1,12 +1,14 @@
 # FiQA-2018 Financial Information Retrieval System
 
-A comparison of **lexical (BM25)** and **semantic (SBERT + FAISS)** retrieval over the [FiQA-2018](https://sites.google.com/view/fiqa) financial QA corpus, evaluated on the BEIR benchmark. Built as part of my MSc coursework and extended into an interactive demo.
+A comparison of lexical (BM25) and semantic (SBERT + FAISS) retrieval over the [FiQA-2018](https://sites.google.com/view/fiqa) financial QA corpus, evaluated on the BEIR benchmark. Built as part of my MSc coursework and extended into an interactive demo.
+
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](http://127.0.0.1:7860/)
 
 ---
 
 ## Results
 
-Evaluated on **648 test queries** from the FiQA-2018 benchmark:
+Evaluated on 648 test queries from the FiQA-2018 benchmark:
 
 | Model | k₁ | b | NDCG@10 | MAP@100 | Recall@100 | P@10 |
 |---|---|---|---|---|---|---|
@@ -29,9 +31,9 @@ Query (natural language)
                                (768-dim, fp16)      (57,638 vectors)
 ```
 
-**Dataset** · FiQA-2018 via [BEIR](https://github.com/beir-cellar/beir) — 57,638 financial passages, 648 test queries  
-**BM25** · [bm25s](https://github.com/xhluca/bm25s) — grid-searched k₁ ∈ {0.5, 0.9, 1.2, 1.5} × b ∈ {0.25, 0.40, 0.55, 0.75}  
-**SBERT** · [`multi-qa-mpnet-base-dot-v1`](https://huggingface.co/sentence-transformers/multi-qa-mpnet-base-dot-v1) — fine-tuned for asymmetric QA retrieval  
+**Dataset** · FiQA-2018 via [BEIR](https://github.com/beir-cellar/beir) - 57,638 financial passages, 648 test queries  
+**BM25** · [bm25s](https://github.com/xhluca/bm25s) - grid-searched k₁ ∈ {0.5, 0.9, 1.2, 1.5} × b ∈ {0.25, 0.40, 0.55, 0.75}  
+**SBERT** · [`multi-qa-mpnet-base-dot-v1`](https://huggingface.co/sentence-transformers/multi-qa-mpnet-base-dot-v1) - fine-tuned for asymmetric QA retrieval  
 **Index** · FAISS `IndexFlatIP` with L2-normalised vectors
 
 ---
@@ -60,7 +62,7 @@ fiqa-ir-system/
 
 ```bash
 # 1. Clone
-git clone https://github.com/<your-username>/fiqa-ir-system.git
+git clone https://github.com/<cipriano-sebastiao>/fiqa-ir-system.git
 cd fiqa-ir-system
 
 # 2. Install dependencies
@@ -96,7 +98,7 @@ Open `notebooks/fiqa_ir_system_final.ipynb` in Colab. Section 6 launches a publi
 
 ---
 
-## Key Findings
+## Main Findings
 
 - **BM25 tuning** (grid search over k₁, b) yields a modest +2.4% NDCG@10 gain. The optimal b=0.75 (stronger length normalisation) reflects the variable passage lengths in FiQA-2018.
 - **Switching paradigm** from lexical to semantic retrieval yields +84.6% NDCG@10 — showing that model selection matters far more than hyperparameter tuning within a paradigm.
