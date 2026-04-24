@@ -21,6 +21,22 @@ import warnings
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 warnings.filterwarnings("ignore")
 
+if os.name == "nt":
+    import sys, types
+
+    if "resource" not in sys.modules:
+        _res = types.ModuleType("resource")
+
+        def _getrusage(who):
+            class _R:
+                ru_maxrss = 0
+
+            return _R()
+
+        _res.getrusage = _getrusage
+        _res.RUSAGE_SELF = 0
+        sys.modules["resource"] = _res
+
 import gradio as gr
 import numpy as np
 import pandas as pd
@@ -30,10 +46,25 @@ import faiss
 
 from sentence_transformers import SentenceTransformer
 from beir import util
-from beir.datasets.dataloader import GenericDataLoader
+# Import `GenericDataLoader` from whichever path is available across
+# BEIR versions. Newer releases use `data_loader`, older ones used
+# `dataloader` (module name changed in some versions).
+try:
+    from beir.datasets.data_loader import GenericDataLoader
+except Exception:
+    try:
+        from beir.datasets.dataloader import GenericDataLoader
+    except Exception as e:
+        raise ImportError(
+            "Could not import GenericDataLoader from beir. "
+            "Ensure `beir` is installed (e.g. `pip install beir==2.0.0`) "
+            "or adjust the package version so the module path matches."
+        ) from e
 
 # ── Constants ──────────────────────────────────────────────────────────────────
-SBERT_MODEL = "multi-qa-mpnet-base-dot-v1"
+# Demo model — fast on CPU (~4 min). Research notebook uses
+# multi-qa-mpnet-base-dot-v1 on GPU for full benchmark results.
+SBERT_MODEL = "all-MiniLM-L6-v2"
 BM25_K1     = 0.9
 BM25_B      = 0.75
 FIQA_URL    = "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/fiqa.zip"
@@ -52,7 +83,7 @@ EXAMPLE_QUERIES = [
     ["how to open a Roth IRA account",                 "BM25 Tuned",  10],
 ]
 
-# ── System initialisation (runs once) ─────────────────────────────────────────
+# ── System initialisation ─────────────────────────────────────────
 print("=" * 60)
 print("FiQA-2018 IR System — initialising...")
 print("=" * 60)
@@ -122,6 +153,7 @@ def search(query: str, model: str, top_k: int) -> pd.DataFrame:
         q_vec        = sbert_model.encode(
             query, normalize_embeddings=True, convert_to_numpy=True
         )
+        q_vec = q_vec.reshape(1, -1)
         scr_r, idx_r = faiss_index.search(q_vec, k=top_k)
         ranked = [
             (corpus_ids[idx_r[0, j]], float(scr_r[0, j]))
@@ -154,7 +186,7 @@ Switch models to compare how term-matching and dense vector search differ on the
 |-------|---------|---------|------------|
 | BM25 Baseline | 0.2345 | 0.1874 | 0.4952 |
 | BM25 Tuned (k₁=0.9, b=0.75) | 0.2401 | 0.1918 | 0.5084 |
-| **SBERT Dense** (multi-qa-mpnet) | **0.4443** | **0.3792** | **0.7936** |
+| SBERT Dense (multi-qa-mpnet) | 0.4443 | 0.3792 | 0.7936 |
 
 *Evaluated on 648 FiQA-2018 test queries · BEIR benchmark*
 """
@@ -196,4 +228,4 @@ with gr.Blocks(title="FiQA-2018 IR System", theme=gr.themes.Soft()) as demo:
     query_box.submit(fn=search, inputs=[query_box, model_dd, topk_sl], outputs=results_df)
 
 if __name__ == "__main__":
-    demo.launch(share=False)
+    demo.launch(share=True, show_error=True)
